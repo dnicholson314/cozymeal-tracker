@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>New Articles</h1>
+
+{% for article in articles %}
+<p>
+    <b>{{article.get_pretty_date()}}</b>:
+    <a href="{{article.url}}">{{article.get_pretty_title()}}</a>
+</p>
+{% endfor %}
+
+<p>Last checked: {{last_checked}}</p>
+{% endblock %}

@@ -1,0 +1,7 @@
+<p>Some new articles were published from your backlog!</p>
+{% for article in articles %}
+<p>
+    <b>{{article.get_pretty_date()}}</b>:
+    <a href="{{article.url}}">{{article.get_pretty_title()}}</a>
+</p>
+{% endfor %}

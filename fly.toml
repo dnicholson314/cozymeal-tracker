@@ -1,0 +1,24 @@
+# fly.toml app configuration file generated for cozymeal-tracker on 2025-03-22T21:52:28-04:00
+#
+# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
+#
+
+app = 'cozymeal-tracker'
+primary_region = 'iad'
+
+[build]
+
+[http_service]
+  internal_port = 5000
+  force_https = true
+  min_machines_running = 1
+  processes = ['app']
+
+[[vm]]
+  memory = '1gb'
+  cpu_kind = 'shared'
+  cpus = 1
+
+[[mounts]]
+  source = "cozymeal_tracker_volume"
+  destination = "/data"

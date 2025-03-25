@@ -18,19 +18,16 @@ def render_home_page():
 @app.post("/")
 def email_for_new_articles():
     last_checked = cza.get_last_checked()
-    last_checked = None
     if not last_checked:
         last_checked = cza.get_date_a_week_ago()
 
     articles = list(cza.get_new_articles(last_checked))
     if not articles:
-        # Don't update last_checked in case any articles 
-        # get published with a backlogged date
-        return '', 204 
+        return '', 204
+    else:
+        cze.send_email_for_articles(articles)
 
-    cze.send_email_for_articles(articles)
+        last_checked = dt.now(cza.LAX_TZ)
+        cza.set_last_checked(last_checked)
 
-    last_checked = dt.now(cza.LAX_TZ)
-    cza.set_last_checked(last_checked)
-
-    return jsonify({"status": "success"}), 200
+        return jsonify({"status": "success"}), 200

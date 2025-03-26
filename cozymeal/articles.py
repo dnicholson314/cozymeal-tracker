@@ -1,32 +1,18 @@
-import json
-import pytz
 import re
 import requests
 
 from bs4 import BeautifulSoup
 from bs4.element import Script
-from datetime import datetime as dt, timedelta as tdel
+from cozymeal import settings
+from datetime import datetime as dt
 from environs import env
 from html import unescape
 from itertools import count
-from json.decoder import JSONDecodeError
-from pathlib import Path
-
-env.read_env()
 
 BASE_ARCHIVE_URL = "https://www.cozymeal.com/magazine/authors/sarah-salisbury"
-
 NAME_REGEX_STR = r'(?<="name" \: ").+(?=",)'
 URL_REGEX_STR = r'(?<="@id": ").+(?=")'
 DATE_REGEX_STR = r'(?<="datePublished": ").+(?=",)'
-
-LAST_CHECKED_DIR = env.path("LAST_CHECKED_DIR", default=Path("/data"))
-LAST_CHECKED_DIR.mkdir(parents=True, exist_ok=True)
-
-LAST_CHECKED_FILENAME = LAST_CHECKED_DIR / 'last_checked_time.json'
-LAST_CHECKED_KEY = "last_checked_time"
-
-LAX_TZ = pytz.timezone('America/Los_Angeles')
 
 class Article:
     def __init__(self, title: str, url: str, date_published: dt):
@@ -72,12 +58,6 @@ def _get_articles_from_archive_page(page: int) -> list[Article]:
 
     return page_of_articles
 
-def get_date_a_week_ago(tz = LAX_TZ) -> dt:
-    return dt.now(tz) - tdel(days=7)
-
-def get_date_a_week_before(timestamp: dt) -> dt:
-    return timestamp - tdel(days=7)
-
 def get_articles() -> list[Article]:
     articles = []
     for i in count(start=1):
@@ -95,15 +75,3 @@ def get_new_articles(last_checked) -> list[Article]:
     filtered_articles = filter(lambda a: a.date_published >= last_checked, sorted_articles)
 
     return filtered_articles
-
-def set_last_checked(timestamp: dt) -> None:
-    with open(LAST_CHECKED_FILENAME, 'w') as file:
-        json.dump({LAST_CHECKED_KEY: timestamp.isoformat()}, file)
-
-def get_last_checked() -> dt | None:
-    try:
-        with open(LAST_CHECKED_FILENAME, 'r') as file:
-            data = json.load(file)
-            return dt.fromisoformat(data[LAST_CHECKED_KEY])
-    except (FileNotFoundError, KeyError, JSONDecodeError):
-        return None

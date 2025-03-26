@@ -1,22 +1,17 @@
+import smtplib, ssl
+
+from cozymeal import settings
 from cozymeal.articles import Article
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
-from environs import env
 from jinja2 import Environment, PackageLoader, select_autoescape
 
-import smtplib, ssl
-
-env.read_env()
 jenv = Environment(
     loader=PackageLoader("cozymeal"),
     autoescape=select_autoescape()
 )
 
 PORT = 465
-PASSWORD = env.str("EMAIL_PASSWORD")
-SENDER_EMAIL = env.str("EMAIL_USERNAME")
-RECEIVER_EMAIL = env.str("RECEIVER_EMAIL")
-
 BASE_TEXT = """\
 Some new articles were published from your backlog!
 """
@@ -36,9 +31,9 @@ def _format_articles_for_email(articles: list[Article]) -> tuple[str, str]:
 def get_message_for_email(articles: list[Article]) -> MIMEMultipart:
     message = MIMEMultipart("alternative")
     message["Subject"] = EMAIL_SUBJECT
-    message["From"] = SENDER_EMAIL
-    message["To"] = RECEIVER_EMAIL
-    message["Cc"] = SENDER_EMAIL
+    message["From"] = settings.SENDER_EMAIL
+    message["To"] = settings.RECEIVER_EMAIL
+    message["Cc"] = settings.SENDER_EMAIL
 
     text, html = _format_articles_for_email(articles)
 
@@ -55,5 +50,5 @@ def send_email_for_articles(articles: list[Article]) -> None:
     message = get_message_for_email(articles)
 
     with smtplib.SMTP_SSL("smtp.gmail.com", PORT, context=context) as server:
-        server.login(SENDER_EMAIL, PASSWORD)
-        server.sendmail(SENDER_EMAIL, RECEIVER_EMAIL, message.as_string())
+        server.login(settings.SENDER_EMAIL, settings.EMAIL_PASSWORD)
+        server.sendmail(settings.SENDER_EMAIL, settings.RECEIVER_EMAIL, message.as_string())

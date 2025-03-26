@@ -15,4 +15,3 @@ fi
 curl -X POST \
 -H "Authorization: Bearer $API_TOKEN" \
 http://localhost:5000/
-curl -X POST http://localhost:5000/

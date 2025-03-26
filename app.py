@@ -1,9 +1,6 @@
 from datetime import datetime as dt
-from environs import env
 from flask import Flask, jsonify, render_template, request
 from cozymeal import articles as cza, emails as cze, utils as czu, settings
-
-env.read_env()
 
 app = Flask(__name__)
  

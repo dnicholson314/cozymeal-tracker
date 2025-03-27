@@ -1,5 +1,8 @@
 #!/bin/sh
 
+echo "Loading environment variables for cron..."
+env > /etc/environment
+
 # Start cron
 echo "Starting cron service..."
 cron

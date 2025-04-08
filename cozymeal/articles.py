@@ -1,5 +1,5 @@
-import re
 import requests
+import json
 
 from bs4 import BeautifulSoup
 from bs4.element import Script
@@ -9,9 +9,6 @@ from html import unescape
 from itertools import count
 
 BASE_ARCHIVE_URL = "https://www.cozymeal.com/magazine/authors/sarah-salisbury"
-NAME_REGEX_STR = r'(?<="name" \: ").+(?=",)'
-URL_REGEX_STR = r'(?<="@id": ").+(?=")'
-DATE_REGEX_STR = r'(?<="datePublished": ").+(?=",)'
 
 class Article:
     def __init__(self, title: str, url: str, date_published: dt):
@@ -25,17 +22,24 @@ class Article:
     def get_pretty_date(self):
         return self.date_published.strftime("%m/%d/%Y")
 
-def _get_date_published(text: str) -> dt:
-    date_published_raw = re.search(DATE_REGEX_STR, text).group()
+    def __str__(self):
+        return f"{self.get_pretty_title()} ({self.get_pretty_date()})"
+
+def _get_date_published(script_data: dict) -> dt:
+    date_published_raw = script_data["datePublished"]
     date_published = dt.fromisoformat(date_published_raw)
     return date_published
 
-def _get_article_from_script(script: Script) -> Article:
-    text: str = script.text
+def _get_article_from_script(script: Script) -> Article | None:
+    text: str = script.text.strip(" \n")
+    script_data = json.loads(text)
 
-    title = re.search(NAME_REGEX_STR, text).group()
-    url = re.search(URL_REGEX_STR, text).group()
-    date_published = _get_date_published(text)
+    try:
+        title = script_data["name"]
+        url = script_data["mainEntityOfPage"]["@id"]
+        date_published = _get_date_published(script_data)
+    except (KeyError, ValueError):
+        return None
 
     return Article(title, url, date_published)
 
@@ -53,6 +57,9 @@ def _get_articles_from_archive_page(page: int) -> list[Article]:
     page_of_articles = []
     for script in scripts:
         article = _get_article_from_script(script)
+        if not article:
+            continue
+
         page_of_articles.append(article)
 
     return page_of_articles
@@ -68,7 +75,7 @@ def get_articles() -> list[Article]:
 
     return articles
 
-def get_new_articles(last_checked) -> list[Article]:
+def get_new_articles(last_checked) -> filter:
     articles = get_articles()
     sorted_articles = sorted(articles, key=lambda a: a.date_published, reverse=True)
     filtered_articles = filter(lambda a: a.date_published >= last_checked, sorted_articles)

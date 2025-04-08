@@ -26,31 +26,31 @@ This document outlines the tests that need to be implemented for each module in 
 
 #### Article Class Tests
 
-- `test_article_initialization`: Test Article class constructor
-- `test_get_pretty_title`: Test pretty title formatting (with HTML entities)
-- `test_get_pretty_date_formatting`: Test date formatting in articles
+- ✅ `test_article_initialization`: Test Article class constructor
+- ✅ `test_get_pretty_title`: Test pretty title formatting (with HTML entities)
+- ✅ `test_get_pretty_date_formatting`: Test date formatting in articles
 
 #### Article Parsing Tests
 
-- `test_get_date_published_valid_format`: Test parsing valid date formats
-- `test_get_date_published_invalid_format`: Test handling invalid date formats
-- `test_get_article_from_script_valid_data`: Test extracting article from valid script data
-- `test_get_article_from_script_missing_fields`: Test handling missing fields in script data
-- `test_get_article_from_script_malformed_data`: Test handling malformed script data
+- ✅ `test_get_date_published_valid_format`: Test parsing valid date formats
+- ✅ `test_get_date_published_invalid_format`: Test handling invalid date formats
+- ✅ `test_get_article_from_script_valid_data`: Test extracting article from valid script data
+- ✅ `test_get_article_from_script_missing_fields`: Test handling missing fields in script data
+- ✅ `test_get_article_from_script_malformed_data`: Test handling malformed script data
 
 #### Archive Page Tests
 
-- `test_get_articles_from_archive_page_success`: Test successful archive page parsing
-- `test_get_articles_from_archive_page_404`: Test handling 404 response
-- `test_get_articles_from_archive_page_network_error`: Test handling network errors
-- `test_get_articles_from_archive_page_empty_response`: Test handling empty responses
+- ✅ `test_get_articles_from_archive_page_success`: Test successful archive page parsing
+- ✅ `test_get_articles_from_archive_page_404`: Test handling 404 response
+- ✅ `test_get_articles_from_archive_page_network_error`: Test handling network errors
+- ✅ `test_get_articles_from_archive_page_empty_response`: Test handling empty responses
 
 #### Article Filtering Tests
 
-- `test_get_new_articles_with_recent_articles`: Test filtering with recent articles
-- `test_get_new_articles_with_old_articles`: Test filtering with only old articles
-- `test_get_new_articles_empty_list`: Test filtering with empty article list
-- `test_get_new_articles_sorting_order`: Test article sorting in results
+- ✅ `test_get_new_articles_with_recent_articles`: Test filtering with recent articles
+- ✅ `test_get_new_articles_with_old_articles`: Test filtering with only old articles
+- ✅ `test_get_new_articles_empty_list`: Test filtering with empty article list
+- ✅ `test_get_new_articles_sorting_order`: Test article sorting in results
 
 ### utils.py
 

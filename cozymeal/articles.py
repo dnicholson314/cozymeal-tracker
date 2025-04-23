@@ -3,7 +3,6 @@ import json
 
 from bs4 import BeautifulSoup
 from bs4.element import Script
-from cozymeal import settings
 from datetime import datetime as dt
 from html import unescape
 from itertools import count

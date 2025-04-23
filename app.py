@@ -8,11 +8,9 @@ app = Flask(__name__)
 def render_home_page():
     date_a_week_ago = czu.get_date_a_week_ago()
     last_checked_str = date_a_week_ago.strftime("%m/%d/%Y")
-    article_list = cza.get_new_articles(date_a_week_ago)
 
     return render_template(
         'home.html',
-        articles = article_list,
         last_checked = last_checked_str,
     )
 
@@ -35,3 +33,18 @@ def email_for_new_articles():
     czu.set_last_checked(last_checked)
 
     return jsonify({"status": "success"}), 200
+
+@app.get("/articles")
+def get_new_articles_this_week():
+    date_a_week_ago = czu.get_date_a_week_ago()
+    article_list = cza.get_new_articles(date_a_week_ago)
+
+    article_data = []
+    for article in article_list:
+        article_data.append({
+            "title": article.get_pretty_title(),
+            "url": article.url,
+            "date_published": article.get_pretty_date(),
+        })
+
+    return jsonify(article_data)

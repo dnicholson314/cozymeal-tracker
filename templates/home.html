@@ -1,14 +1,14 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h1>New Articles</h1>
 
-{% for article in articles %}
-<p>
-    <b>{{article.get_pretty_date()}}</b>:
-    <a href="{{article.url}}">{{article.get_pretty_title()}}</a>
-</p>
-{% endfor %}
+<div class="container">
+    <h1>New Articles</h1>
+    <div class="articles">
+        <div class="loading">Loading...</div>
+    </div>
+    <div class="last-checked">Published since: {{last_checked}}</div>
+    <script src="{{ url_for('static', filename='js/articles.js')}}"></script>
+</div>
 
-<p>Last checked: {{last_checked}}</p>
 {% endblock %}

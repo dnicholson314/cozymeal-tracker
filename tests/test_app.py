@@ -68,7 +68,6 @@ def test_home_page(client: FlaskClient, app: Flask) -> None:
 
         # Additional checks for expected context variables
         assert 'last_checked' in context
-        assert 'articles' in context
 
 def test_post_without_auth(client: FlaskClient) -> None:
     """Test POST request with no credentials."""
